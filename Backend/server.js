@@ -26,11 +26,11 @@ app.use(express.json())
 app.use(cors({
     origin: [
         "http://localhost:5173",
-        "http://localhost:5174"
+        "http://localhost:5174",
+        "https://spotify-m8np.vercel.app"
     ],
     credentials: true
 }));
-
 
 // routes
 app.use("/api/song", songRouter)
