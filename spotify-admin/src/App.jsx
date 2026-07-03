@@ -11,6 +11,7 @@ import Sidebar from './components/SideBar'
 import Navbar from './components/Navbar'
 
 export const url = 'https://spotify-tr43.onrender.com'
+// export const url = 'https://localhost:4000'
 
 const App = () => {
   return (
