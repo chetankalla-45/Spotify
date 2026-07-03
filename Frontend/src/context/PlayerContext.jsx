@@ -96,7 +96,6 @@ const PlayerContextProvider = (props) => {
             console.log("getAlbumsData error:", err);
         }
     }
-    
     useEffect(()=>{
         setTimeout(()=>{
             audioRef.current.ontimeupdate = () => {
