@@ -1,4 +1,5 @@
 import { createContext, useEffect, useRef, useState } from "react";
+// import { songsData } from "../frontend-assets/assets";  //this was for frontend
 import axios from 'axios'
 
 export const PlayerContext = createContext();
@@ -9,12 +10,12 @@ const PlayerContextProvider = (props) => {
     const seekBg = useRef();
     const seekBar = useRef()
 
-    const url = 'https://spotify-tr43.onrender.com'
+    const url = 'http://localhost:4000'
 
     const [songsData, setSongsData] = useState([]);
     const [albumsData, setAlbumsData] = useState([]);
     
-    const [track, setTrack] = useState(null)   // FIXED: was useState([]) — an empty array is truthy, so Player.jsx tried to render track.image / track.desc before data loaded, crashing the whole app
+    const [track, setTrack] = useState(songsData[0])
     const [playerStatus, setPlayerStatus] = useState(false)
     const [time, setTime] = useState({
         currentTime:{
@@ -37,6 +38,9 @@ const PlayerContextProvider = (props) => {
     }
 
     const playWithId = async (id) =>{
+        // await setTrack(songsData[id]);
+        // await audioRef.current.play();
+        // setPlayerStatus(true);
         await songsData.map((item)=>{
             if(id === item._id){
                 setTrack(item);
@@ -48,7 +52,7 @@ const PlayerContextProvider = (props) => {
 
     const previous = async () => {
         songsData.map(async (item, index)=>{
-            if(track && track._id === item._id && index>0){
+            if(track._id === item._id && index>0){
                 await setTrack(songsData[index-1]);
                 await audioRef.current.play();
                 setPlayerStatus(true);
@@ -58,7 +62,7 @@ const PlayerContextProvider = (props) => {
 
     const next = async () => {
         songsData.map(async (item, index)=>{
-            if(track && track._id === item._id && index<songsData.length-1){
+            if(track._id === item._id && index<songsData.length-1){
                 await setTrack(songsData[index+1]);
                 await audioRef.current.play();
                 setPlayerStatus(true);
@@ -67,35 +71,28 @@ const PlayerContextProvider = (props) => {
     }
 
     const seekSong = async (e) => {
-        audioRef.current.currentTime = ((e.nativeEvent.offsetX / seekBg.current.offsetWidth)*audioRef.current.duration)
+        audioRef.current.currentTime = ((e.nativeEvent.offsetX / seekBg.current.offsetWidth)*audioRef.current.duration)   // after consoling e , we get offsetX there 
     }
 
     const getSongsData = async () => {
         try{
             const responce = await axios.get(`${url}/api/song/list`);
-            if(responce.data.success){
-                setSongsData(responce.data.songs);
-                setTrack(responce.data.songs[0] || null);
-            } else {
-                console.log("Backend returned failure for songs:", responce.data);
-            }
+            setSongsData(responce.data.songs);
+            setTrack(responce.data.songs[0]);
         }catch(err){
-            console.log("getSongsData error:", err);
+            
         }
     }
 
     const getAlbumsData = async () => {
         try{
             const response = await axios.get(`${url}/api/album/list`);
-            if(response.data.success){
-                setAlbumsData(response.data.albums);
-            } else {
-                console.log("Backend returned failure for albums:", response.data);
-            }
+            setAlbumsData(response.data.albums);
         }catch(err){
-            console.log("getAlbumsData error:", err);
+            
         }
     }
+
     useEffect(()=>{
         setTimeout(()=>{
             audioRef.current.ontimeupdate = () => {

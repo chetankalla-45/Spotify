@@ -32,6 +32,7 @@ app.use(cors({
     credentials: true
 }));
 
+
 // routes
 app.use("/api/song", songRouter)
 app.use("/api/album", albumRouter)

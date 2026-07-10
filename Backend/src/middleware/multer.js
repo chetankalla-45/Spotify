@@ -1,21 +1,14 @@
-// import multer from "multer";
-
-// const storage = multer.diskStorage({
-//     fileName: function(req,file,callback){
-//         callback(null,file.originalname)
-//     }
-// })
-
-// const upload = multer({storage});
-
-// export default upload;
-
 import multer from "multer";
-import path from "path";
+import fs from "fs";
+
+const uploadDir = "uploads/";
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 const storage = multer.diskStorage({
     destination: function (req, file, callback) {
-        callback(null, "uploads/");
+        callback(null, uploadDir);
     },
     filename: function (req, file, callback) {
         callback(null, `${Date.now()}-${file.originalname}`);
