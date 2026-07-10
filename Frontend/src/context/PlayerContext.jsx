@@ -10,8 +10,8 @@ const PlayerContextProvider = (props) => {
     const seekBg = useRef();
     const seekBar = useRef()
 
-    // const url = 'http://localhost:4000'
-    const url = 'https://spotify-tr43.onrender.com'
+    const url = 'http://localhost:4000'
+    // const url = 'https://spotify-tr43.onrender.com'
 
     const [songsData, setSongsData] = useState([]);
     const [albumsData, setAlbumsData] = useState([]);
